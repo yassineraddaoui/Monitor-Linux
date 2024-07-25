@@ -11,6 +11,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring_network
 
   prometheus:
     image: prom/prometheus:latest
@@ -19,6 +21,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring_network
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -29,6 +33,12 @@ services:
       - '--path.rootfs=/host'
     volumes:
       - /:/host:ro,rslave
+    networks:
+      - monitoring_network
 
 volumes:
   grafana_data:
+
+networks:
+  monitoring_network:
+    driver: bridge
